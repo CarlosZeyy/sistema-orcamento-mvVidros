@@ -41,12 +41,13 @@ export default function BudgetForm() {
           Dados do cliente
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="flex flex-col gap-1">
+          {/* Campo: Nome */}
+          <div className="flex flex-col gap-1 w-full">
             <label className="text-sm font-medium text-gray-700">Nome:</label>
             <input
               {...register("client.name")}
               placeholder="Nome do cliente"
-              className="px-3 py-2 text-gray-900 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+              className="px-3 py-2 w-full text-gray-900 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
             />
             {errors.client?.name?.message && (
               <p className="text-xs text-red-500">
@@ -55,14 +56,15 @@ export default function BudgetForm() {
             )}
           </div>
 
-          <div>
+          {/* Campo: Endereço */}
+          <div className="flex flex-col gap-1 w-full">
             <label className="text-sm font-medium text-gray-700">
               Endereço:
             </label>
             <input
               {...register("client.address")}
               placeholder="Endereço do cliente"
-              className="px-3 py-2 ml-1 text-gray-900 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+              className="px-3 py-2 w-full text-gray-900 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
             />
             {errors.client?.address?.message && (
               <p className="text-xs text-red-500">
@@ -71,7 +73,8 @@ export default function BudgetForm() {
             )}
           </div>
 
-          <div>
+          {/* Campo: Telefone */}
+          <div className="flex flex-col gap-1 w-full">
             <label className="text-sm font-medium text-gray-700">
               Telefone:
             </label>
@@ -79,7 +82,7 @@ export default function BudgetForm() {
               type="tel"
               {...register("client.tel")}
               placeholder="Telefone do cliente"
-              className="px-3 py-2 ml-1 text-gray-900 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+              className="px-3 py-2 w-full text-gray-900 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
             />
             {errors.client?.tel?.message && (
               <p className="text-xs text-red-500">
@@ -125,7 +128,7 @@ export default function BudgetForm() {
                 <input
                   {...register(`items.${index}.productName` as const)}
                   placeholder="Ex: Espelho 4mm Bisotê"
-                  className="px-3 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  className="px-3 py-2 text-gray-900 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                 />
                 {errors.items?.[index]?.productName && (
                   <p className="text-xs text-red-500">
@@ -145,7 +148,7 @@ export default function BudgetForm() {
                     valueAsNumber: true,
                   })}
                   placeholder="0.00"
-                  className="px-3 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  className="px-3 py-2 text-gray-900 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                 />
                 {errors.items?.[index]?.productValue && (
                   <p className="text-xs text-red-500">
@@ -164,7 +167,7 @@ export default function BudgetForm() {
                     valueAsNumber: true,
                   })}
                   placeholder="1"
-                  className="px-3 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  className="px-3 py-2 text-gray-900 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                 />
                 {errors.items?.[index]?.productQuantity && (
                   <p className="text-xs text-red-500">
