@@ -56,21 +56,21 @@ export default function BudgetForm() {
         <div key={field.id}>
           <div>
             <input
-              {...register(`items.${index}.productName` as const, {
-                required: "Nome do item é obrigatório",
-              })}
+              {...register(`items.${index}.productName` as const)}
               placeholder="Nome do item"
             />
             <input
               {...register(`items.${index}.productValue` as const, {
-                required: "Valor do item é obrigatório",
+                valueAsNumber: true,
               })}
+              type="number"
               placeholder="Valor do item"
             />
             <input
               {...register(`items.${index}.productQuantity` as const, {
-                required: "Quantidade do item é obrigatório",
+                valueAsNumber: true,
               })}
+              type="number"
               placeholder="Quantidade de item"
             />
             {errors.items?.[index]?.productName && (
