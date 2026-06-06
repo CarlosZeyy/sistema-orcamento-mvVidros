@@ -26,11 +26,15 @@ export default function BudgetForm() {
     console.log("Dados válidos: ", data);
   };
 
+  const onError = (errors: any) => {
+    console.log("O formulário foi bloqueado! Veja os erros:", errors);
+  };
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit, onError)} className="text-gray-700">
       <div>
         <label>Nome:</label>
-        <input {...register("client.name")} />
+        <input {...register("client.name")} placeholder="Nome do cliente"/>
         {errors.client?.name?.message && (
           <p style={{ color: "red" }}>{errors.client?.name?.message}</p>
         )}
@@ -38,7 +42,7 @@ export default function BudgetForm() {
 
       <div>
         <label>Endereço:</label>
-        <input {...register("client.address")} />
+        <input {...register("client.address")} placeholder="Endereço do cliente"/>
         {errors.client?.address?.message && (
           <p style={{ color: "red" }}>{errors.client?.address?.message}</p>
         )}
@@ -46,7 +50,7 @@ export default function BudgetForm() {
 
       <div>
         <label>Telefone:</label>
-        <input type="tel" {...register("client.tel")} />
+        <input type="tel" {...register("client.tel")} placeholder="Telefone do cliente"/>
         {errors.client?.tel?.message && (
           <p style={{ color: "red" }}>{errors.client?.tel?.message}</p>
         )}
@@ -90,7 +94,11 @@ export default function BudgetForm() {
             )}
           </div>
           {
-            <button type="button" onClick={() => remove(index)}>
+            <button
+              type="button"
+              className="cursor-pointer"
+              onClick={() => remove(index)}
+            >
               Remover
             </button>
           }
@@ -100,6 +108,7 @@ export default function BudgetForm() {
       {
         <button
           type="button"
+          className="cursor-pointer"
           onClick={() =>
             append({
               productName: "",
@@ -112,7 +121,9 @@ export default function BudgetForm() {
           Adicionar item
         </button>
       }
-      <button type="submit">Enviar</button>
+      <button type="submit" className="cursor-pointer">
+        Enviar
+      </button>
     </form>
   );
 }
