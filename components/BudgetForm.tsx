@@ -57,6 +57,24 @@ export default function BudgetForm() {
     return telNumber;
   }
 
+  const handleGeneratePDF = async () => {
+    try {
+      const response = await fetch(`/api/pdf`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json()
+
+      console.log("Dados enviados com sucesso!", result);
+    } catch (error) {
+      console.error("Erro ao enviar dados: ", error);
+    }
+  };
+
   {
     if (isPreview === true && formData) {
       const currentDate = new Date().toLocaleDateString("pt-BR");
@@ -168,12 +186,19 @@ export default function BudgetForm() {
             </div>
 
             {/* Botão de Voltar */}
-            <div className="mt-10 flex justify-center md:justify-start">
+            <div className="mt-10 flex justify-center md:justify-between">
               <button
                 onClick={() => setIsPreview(false)}
                 className="cursor-pointer bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors w-full md:w-auto"
               >
                 Voltar e editar
+              </button>
+
+              <button
+                onClick={() => {handleGeneratePDF()}}
+                className="cursor-pointer bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors w-full md:w-auto"
+              >
+                Gerar PDF e enviar
               </button>
             </div>
           </div>
