@@ -5,6 +5,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { budgetSchema } from "@/lib/schema";
 import { useState } from "react";
+import { ReactFormState } from "react-dom/client";
 
 type BudgetFormData = z.infer<typeof budgetSchema>;
 
@@ -67,7 +68,11 @@ export default function BudgetForm() {
         body: JSON.stringify(formData),
       });
 
-      const result = await response.json()
+      const result = await response.blob();
+
+      const browser = URL.createObjectURL(result);
+
+      window.open(browser);
 
       console.log("Dados enviados com sucesso!", result);
     } catch (error) {
@@ -140,10 +145,17 @@ export default function BudgetForm() {
                 <thead className="text-gray-900 border-b-2 border-gray-300">
                   <tr>
                     <th className="pb-3 px-2 font-semibold">Qtd</th>
+
+                    <th className="pb-3 px-2 font-semibold">
+                      Categoria do Produto
+                    </th>
+
                     <th className="pb-3 px-2 font-semibold">
                       Descrição do Produto
                     </th>
+
                     <th className="pb-3 px-2 font-semibold">Preço Unit.</th>
+
                     <th className="pb-3 px-2 font-semibold">Total</th>
                   </tr>
                 </thead>
@@ -155,12 +167,17 @@ export default function BudgetForm() {
                       className="border-b border-gray-200 text-gray-800 hover:bg-gray-50"
                     >
                       <td className="py-4 px-2">{item.productQuantity}</td>
+
+                      <td className="py-4 px-2">{item.productCategory}</td>
+
                       <td className="py-4 px-2 font-medium">
                         {item.productName}
                       </td>
+
                       <td className="py-4 px-2">
                         R$ {item.productValue.toFixed(2)}
                       </td>
+
                       <td className="py-4 px-2">
                         R${" "}
                         {(item.productQuantity * item.productValue).toFixed(2)}
@@ -195,7 +212,9 @@ export default function BudgetForm() {
               </button>
 
               <button
-                onClick={() => {handleGeneratePDF()}}
+                onClick={() => {
+                  handleGeneratePDF();
+                }}
                 className="cursor-pointer bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors w-full md:w-auto"
               >
                 Gerar PDF e enviar
@@ -285,7 +304,7 @@ export default function BudgetForm() {
                 productName: "",
                 productValue: 0,
                 productQuantity: 1,
-                productCategory: [],
+                productCategory: "",
               })
             }
             className="text-sm bg-blue-50 text-blue-600 px-3 py-1.5 rounded-md font-medium hover:bg-blue-100 transition-colors cursor-pointer"
@@ -314,6 +333,24 @@ export default function BudgetForm() {
                     {errors.items[index].productName?.message}
                   </p>
                 )}
+              </div>
+
+              <div className="w-full md:w-32 flex flex-col gap-1">
+                <label
+                  htmlFor="category"
+                  className="text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Categoria
+                </label>
+                <select
+                  {...register(`items.${index}.productCategory` as const)}
+                  className="px-3 py-2 text-gray-900 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                >
+                  <option value="Vidro">Vidro</option>
+                  <option value="Alumínio">Alumínio</option>
+                  <option value="Mão de Obra">Mão de Obra</option>
+                  <option value="Ferragem">Ferragem</option>
+                </select>
               </div>
 
               <div className="w-full md:w-32 flex flex-col gap-1">

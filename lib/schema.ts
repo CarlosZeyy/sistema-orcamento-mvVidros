@@ -10,7 +10,7 @@ export const budgetSchema = z.object({
     z.object({
       productName: z.string().min(2, `Minimo de 2 caracteres`).nonempty(),
       productValue: z.number().positive("O valor deve ser maior do que zero"),
-      productCategory: z.array(z.string()),
+      productCategory: z.string(),
       productQuantity: z.number().positive(`O valor deve ser maior do que zero`)
     }),
   ),
