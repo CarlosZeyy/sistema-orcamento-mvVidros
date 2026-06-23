@@ -288,6 +288,22 @@ export default function BudgetForm() {
               </p>
             )}
           </div>
+
+          {/* Campo: Email */}
+          <div className="flex flex-col gap-1 w-full">
+            <label className="text-sm font-medium text-gray-700">Email:</label>
+            <input
+              type="tel"
+              {...register("client.email")}
+              placeholder="Email do cliente (Opcional)"
+              className="px-3 py-2 w-full text-gray-900 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+            />
+            {errors.client?.email?.message && (
+              <p className="text-xs text-red-500">
+                {errors.client?.email?.message}
+              </p>
+            )}
+          </div>
         </div>
       </section>
 

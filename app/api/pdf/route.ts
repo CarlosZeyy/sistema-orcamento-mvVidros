@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import puppeteer from "puppeteer";
+import puppeteer, { Browser } from "puppeteer";
+import nodemailer from 'nodemailer'
+
+let browser: Browser;
 
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
 
-    const browser = await puppeteer.launch({
+    browser = await puppeteer.launch({
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
 
@@ -119,7 +122,7 @@ export async function POST(request: NextRequest) {
     </html>
     `;
 
-    await page.setContent(htmlContent, { waitUntil: "domcontentloaded"});
+    await page.setContent(htmlContent, { waitUntil: "domcontentloaded" });
 
     const pdf = await page.pdf({
       format: "A4",
@@ -127,7 +130,30 @@ export async function POST(request: NextRequest) {
       margin: { top: "0", right: "0", bottom: "0", left: "0" },
     });
 
-    await browser.close();
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: data.client.email || process.env.EMAIL_USER,
+      subject: "Orçamento Comercial - MV Vidros",
+      text: `Olá ${data.client.name}, segue em anexo o seu orçamento`,
+
+      attachments: [
+        {
+          filename: `orçamento_${data.client.name}_${currentDate}.pdf`,
+          content: Buffer.from(pdf), 
+          contentType: "application/pdf",
+        },
+      ],
+    };
+
+    await transporter.sendMail(mailOptions);
 
     return new NextResponse(Buffer.from(pdf), {
       status: 200,
@@ -136,5 +162,9 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Erro ao receber dados do pdf! ", error);
     return NextResponse.json({ error: "Error!" }, { status: 500 });
+  } finally {
+    if (browser) {
+      await browser.close();
+    }
   }
 }
