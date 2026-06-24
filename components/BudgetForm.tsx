@@ -5,7 +5,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { budgetSchema } from "@/lib/schema";
 import { useState } from "react";
-import { ReactFormState } from "react-dom/client";
 
 type BudgetFormData = z.infer<typeof budgetSchema>;
 
@@ -25,6 +24,7 @@ export default function BudgetForm() {
   });
 
   const [isPreview, setIsPreview] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<BudgetFormData | null>(null);
 
   const onSubmit = (data: BudgetFormData) => {
@@ -60,6 +60,8 @@ export default function BudgetForm() {
 
   const handleGeneratePDF = async () => {
     try {
+      setIsLoading(true);
+
       const response = await fetch(`/api/pdf`, {
         method: "POST",
         headers: {
@@ -77,6 +79,8 @@ export default function BudgetForm() {
       console.log("Dados enviados com sucesso!", result);
     } catch (error) {
       console.error("Erro ao enviar dados: ", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -212,12 +216,15 @@ export default function BudgetForm() {
               </button>
 
               <button
+                disabled={isLoading}
                 onClick={() => {
                   handleGeneratePDF();
                 }}
-                className="cursor-pointer bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors w-full md:w-auto"
+                className="cursor-pointer bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors w-full md:w-auto disabled:opacity-50"
               >
-                Gerar PDF e enviar
+                {isLoading
+                  ? "Gerando arquivo e enviando ao cliente..."
+                  : "Gerar PDF e enviar"}
               </button>
             </div>
           </div>
