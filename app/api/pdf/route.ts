@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import puppeteer, { Browser } from "puppeteer";
-import nodemailer from 'nodemailer'
+import nodemailer from "nodemailer";
 
 let browser: Browser;
 
@@ -147,13 +147,27 @@ export async function POST(request: NextRequest) {
       attachments: [
         {
           filename: `orçamento_${data.client.name}_${currentDate}.pdf`,
-          content: Buffer.from(pdf), 
+          content: Buffer.from(pdf),
           contentType: "application/pdf",
         },
       ],
     };
 
     await transporter.sendMail(mailOptions);
+
+    const pdfBase64 = Buffer.from(pdf).toString("base64");
+
+    const wppApiBody = {
+      tel: data.client.tel,
+      name: data.client.name,
+      pdfBase64: pdfBase64,
+    };
+
+    await fetch(process.env.WHATSAPP_API_URL as string, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(wppApiBody),
+    });
 
     return new NextResponse(Buffer.from(pdf), {
       status: 200,
